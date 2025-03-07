@@ -10,11 +10,17 @@ import Foundation
 final class PokemonViewModel : ObservableObject {
     private let pokemonManager = PokemonManager()
     @Published var pokemons = [PokemonModel]()
+    @Published var filteredPokemons = [PokemonModel]()
     @Published var detailPokemon: PokemonDetailModel?
-    @Published var searchText: String = ""
+    @Published var searchText: String = "" {
+        didSet{
+            filterPokemons()
+        }
+    }
     
     init(){
         self.pokemons = pokemonManager.getPokemons()
+        filterPokemons()
     }
     
     func getPokemonIndex(pokemon: PokemonModel) -> Int {
@@ -30,5 +36,22 @@ final class PokemonViewModel : ObservableObject {
                 self.detailPokemon = detail
             }
         }
+    }
+    
+    func filterPokemons(){
+        
+        if pokemons.isEmpty{
+            return
+        }
+        
+        if searchText.isEmpty{
+            filteredPokemons = pokemons
+        }else{
+            filteredPokemons = pokemons.filter({ pokemon in
+                pokemon.name.lowercased().contains(searchText.lowercased())
+            })
+        }
+        
+        
     }
 }

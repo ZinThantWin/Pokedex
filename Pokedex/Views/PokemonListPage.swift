@@ -14,7 +14,7 @@ struct PokemonListPage: View {
         NavigationStack{
             ScrollView {
                 LazyVGrid(columns: adaptiveColumns) {
-                    ForEach (viewModel.pokemons){pokemon in
+                    ForEach (viewModel.filteredPokemons){pokemon in
                         NavigationLink {
                             PokemonDetailPage(pokemon: pokemon)
                         } label: {
@@ -24,6 +24,8 @@ struct PokemonListPage: View {
                     }
                 }
             }
+            .animation(.easeIn(duration: 0.3), value: viewModel.searchText)
+            .searchable(text: $viewModel.searchText)
             .navigationTitle("Pokedex")
             .navigationBarTitleDisplayMode(.inline)
         }
